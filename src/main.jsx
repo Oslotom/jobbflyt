@@ -3,13 +3,12 @@ import{createRoot}from'react-dom/client';
 import{LayoutDashboard,BriefcaseBusiness,CalendarDays,ChartColumn,Plus,Search,Download,Upload,Trash2,X,CheckCircle2,ArrowUpRight,FileText}from'lucide-react';
 import{ResponsiveContainer,AreaChart,Area,CartesianGrid,XAxis,YAxis,Tooltip,PieChart,Pie,Cell}from'recharts';
 import './style.css';
+import seed from './applications.json';
 const STATUSES=['Lagret','Planlegger å søke','Søkt','Intervju','Andre intervju','Tilbud','Avslag','Avsluttet'];
 const colors={'Lagret':'#99a6b8','Planlegger å søke':'#8d97db','Søkt':'#6477ea','Intervju':'#e4a650','Andre intervju':'#af85e2','Tilbud':'#3dab8a','Avslag':'#e27b83','Avsluttet':'#9fa5b3'};
-const demo=[['Nordlys Digital','Product Manager','Søkt','Høy',-18,4],['FjordTech','Senior Product Manager','Intervju','Høy',-26,3],['Klar Plattform','Product Owner','Lagret','Medium',-3,9],['Varde AS','Delivery Lead','Søkt','Medium',-13,1],['Lynx Studio','Digital Product Manager','Andre intervju','Høy',-33,5],['Hav Data','Technical Product Manager','Avslag','Medium',-48,0],['Origo Labs','Product Manager','Planlegger å søke','Høy',-1,6],['Nord Software','Product Owner','Tilbud','Høy',-45,0]];
 function offset(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
-const seed=demo.map(([company,title,status,priority,created,follow],i)=>({id:'demo-'+i,company,title,status,priority,created:offset(created),follow:follow?offset(follow):'',location:'Oslo',url:'',notes:'',contact:'',history:[{status,date:offset(created)}]}));
 const empty={company:'',title:'',status:'Lagret',priority:'Medium',location:'',created:offset(0),follow:'',url:'',notes:'',contact:''};
-function load(){try{let v=localStorage.getItem('jobbflyt.v1');return v?JSON.parse(v):seed}catch{return seed}}
+function load(){try{let v=localStorage.getItem('jobbflyt.v1');const saved=v?JSON.parse(v):null;return saved&&!(saved.length===8&&saved.every(j=>/^demo-[0-7]$/.test(j.id)))?saved:seed}catch{return seed}}
 function App(){
  const [jobs,setJobs]=useState(load),[page,setPage]=useState('Dashboard'),[query,setQuery]=useState(''),[filter,setFilter]=useState('Alle'),[modal,setModal]=useState(null),[toast,setToast]=useState('');
  useEffect(()=>{localStorage.setItem('jobbflyt.v1',JSON.stringify(jobs))},[jobs]);
